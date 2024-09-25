@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MLApp</string>
+    <string name="title_activity_single_image">SingleImageActivity</string>
+    <string name="title_activity_">Activity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_action_screen">ActionScreen</string>
+    <string name="title_activity_etc_screen">EtcScreen</string>
+</resources>
