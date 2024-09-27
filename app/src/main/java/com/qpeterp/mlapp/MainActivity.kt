@@ -34,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -41,12 +42,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.qpeterp.mlapp.ui.action.ActionScreen
+import com.qpeterp.mlapp.ui.action.ActionViewModel
+import com.qpeterp.mlapp.ui.action.ActionViewModelFactory
 import com.qpeterp.mlapp.ui.etc.EtcScreen
 import com.qpeterp.mlapp.ui.home.HomeScreen
 import com.qpeterp.mlapp.ui.theme.MLAppTheme
 
 class MainActivity : ComponentActivity() {
-
     // 권한 요청 런처
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -58,9 +60,11 @@ class MainActivity : ComponentActivity() {
             showDialog(this)
         }
     }
+    private lateinit var actionViewModel: ActionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionViewModel = ViewModelProvider(this, ActionViewModelFactory()).get(ActionViewModel::class.java)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
@@ -107,7 +111,10 @@ class MainActivity : ComponentActivity() {
                 // 이미 권한이 부여된 경우
             }
 
-            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) -> {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.CAMERA
+            ) -> {
                 // 권한 요청 이유 설명
                 showDialog(this)
             }
