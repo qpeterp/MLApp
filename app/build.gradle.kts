@@ -49,11 +49,14 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        viewBinding = true
     }
 }
 
 dependencies {
+    // Compose 에서 LiveData 를 사용하기 위해서 필요한 dependencies
+    implementation(libs.androidx.runtime.livedata)
+
     // CameraX
     implementation(libs.androidx.camera.core.v110)
     implementation(libs.androidx.camera.camera2)
