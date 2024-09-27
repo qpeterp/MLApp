@@ -42,8 +42,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.qpeterp.mlapp.ui.action.ActionScreen
-import com.qpeterp.mlapp.ui.action.ActionViewModel
-import com.qpeterp.mlapp.ui.action.ActionViewModelFactory
+import com.qpeterp.mlapp.viewmodel.action.ActionViewModel
+import com.qpeterp.mlapp.viewmodel.action.ActionViewModelFactory
 import com.qpeterp.mlapp.ui.etc.EtcScreen
 import com.qpeterp.mlapp.ui.home.HomeScreen
 import com.qpeterp.mlapp.ui.theme.MLAppTheme

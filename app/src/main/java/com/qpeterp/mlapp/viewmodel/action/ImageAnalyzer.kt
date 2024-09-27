@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.action
+package com.qpeterp.mlapp.viewmodel.action
 
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage

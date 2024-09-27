@@ -30,6 +30,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.qpeterp.mlapp.R
 import com.qpeterp.mlapp.utils.logE
+import com.qpeterp.mlapp.viewmodel.action.ActionViewModel
+import com.qpeterp.mlapp.viewmodel.action.ActionViewModelFactory
+import com.qpeterp.mlapp.viewmodel.action.ImageAnalyzer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

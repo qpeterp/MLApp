@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.action
+package com.qpeterp.mlapp.viewmodel.action
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
