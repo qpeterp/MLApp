@@ -55,7 +55,7 @@ fun ActionScreen(modifier: Modifier = Modifier) {
     // count의 LiveData를 Compose 상태로 변환
     val count = actionViewModel.count.observeAsState(initial = 0)
     val isSquatDown = actionViewModel.isSquatDown.observeAsState(initial = 0)
-    var isSpeaking = remember { mutableStateOf(false) }
+    val isSpeaking = remember { mutableStateOf(false) }
     val tts = rememberTextToSpeech()
 
     isSpeaking.value = if (tts.value?.isSpeaking == true) {
