@@ -1,16 +1,20 @@
 package com.qpeterp.mlapp.ui.action
 
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -19,6 +23,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -33,6 +40,7 @@ import com.qpeterp.mlapp.utils.logE
 import com.qpeterp.mlapp.viewmodel.action.ActionViewModel
 import com.qpeterp.mlapp.viewmodel.action.ActionViewModelFactory
 import com.qpeterp.mlapp.viewmodel.action.ImageAnalyzer
+import com.qpeterp.mlapp.viewmodel.action.rememberTextToSpeech
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -46,13 +54,31 @@ fun ActionScreen(modifier: Modifier = Modifier) {
     actionViewModel = viewModel(factory = ActionViewModelFactory())
     // count의 LiveData를 Compose 상태로 변환
     val count = actionViewModel.count.observeAsState(initial = 0)
+    val isSquatDown = actionViewModel.isSquatDown.observeAsState(initial = 0)
+    var isSpeaking = remember { mutableStateOf(false) }
+    val tts = rememberTextToSpeech()
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        AndroidView(
-            factory = { context ->
-                val view = LayoutInflater.from(context).inflate(R.layout.screen_camera, null)
-                val previewView = view.findViewById<PreviewView>(R.id.previewView)
-                val cameraExecutor = Executors.newSingleThreadExecutor()
+    isSpeaking.value = if (tts.value?.isSpeaking == true) {
+        tts.value?.stop()
+         false
+    } else {
+        tts.value?.speak(
+            if (isSquatDown.value == true) "내려가!!!" else "올라가!!", TextToSpeech.QUEUE_FLUSH, null, ""
+        )
+        true
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(if (isSquatDown.value == true) Color.Red else Color.Green)
+    ) {
+        Box(modifier = modifier.fillMaxWidth()) {
+            AndroidView(
+                factory = { context ->
+                    val view = LayoutInflater.from(context).inflate(R.layout.screen_camera, null)
+                    val previewView = view.findViewById<PreviewView>(R.id.previewView)
+                    val cameraExecutor = Executors.newSingleThreadExecutor()
 
                     startCamera(
                         previewView = previewView,
@@ -77,7 +103,6 @@ fun ActionScreen(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(top = 20.dp),
-            horizontalArrangement = Arrangement.Absolute.Center
             horizontalArrangement = Arrangement.Absolute.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
