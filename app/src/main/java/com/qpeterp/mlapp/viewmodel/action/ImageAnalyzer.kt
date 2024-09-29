@@ -22,16 +22,10 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
     private val targetSquatDownPose: TargetPose = TargetPose(
         listOf(
             TargetShape(
-                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 90.0
+                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 85.0
             ),
             TargetShape(
-                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 90.0
-            ),
-            TargetShape(
-                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 90.0
-            ),
-            TargetShape(
-                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 90.0
+                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 85.0
             ),
         )
     )
@@ -43,12 +37,6 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
             TargetShape(
                 PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 180.0
             ),
-            TargetShape(
-                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 180.0
-            ),
-            TargetShape(
-                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 180.0
-            ),
         )
     )
     private val poseMatcher = PoseMatcher()
@@ -58,13 +46,11 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
         when {
             isSquatDown -> {
                 if (actionViewModel.isSquatDown.value == true) {
-                    log("스쿼트 앉았다!!!!!!!!!!!!")
                     actionViewModel.squatDownState()
                 }
             }
             isSquatUp -> {
                 if (actionViewModel.isSquatDown.value == false) {
-                    log("섰1다!!!!!!!!!!!!")
                     log("!!!!!!스쿼트 횟수 : ${actionViewModel.count.value}")
                     actionViewModel.addCount()
                     actionViewModel.squatDownState()
@@ -83,7 +69,9 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
         poseDetector.process(image)
             .addOnSuccessListener { pose ->
                 // 분석이 성공적으로 완료되면 결과 처리
-                log("image result is :\n\n ${pose.allPoseLandmarks}")
+                if (pose.getPoseLandmark(25) == null || pose.getPoseLandmark(26) == null) return@addOnSuccessListener
+                if (pose.getPoseLandmark(25)!!.inFrameLikelihood < 0.9 || pose.getPoseLandmark(26)!!.inFrameLikelihood < 0.9) return@addOnSuccessListener // if pose.getPoseLandmark(25) null, i will die
+
                 onPoseDetected(pose)
             }
             .addOnFailureListener { e ->
