@@ -54,22 +54,32 @@ fun ActionScreen(modifier: Modifier = Modifier) {
                 val previewView = view.findViewById<PreviewView>(R.id.previewView)
                 val cameraExecutor = Executors.newSingleThreadExecutor()
 
-                startCamera(
-                    previewView = previewView,
-                    context = context,
-                    lifecycleOwner = lifecycleOwner,
-                    cameraExecutor = cameraExecutor
-                )
-                view
-            },
-            modifier = modifier
-                .aspectRatio(9.5f / 16f) // 너비 비율에 맞춰서 높이 조절
-        )
+                    startCamera(
+                        previewView = previewView,
+                        context = context,
+                        lifecycleOwner = lifecycleOwner,
+                        cameraExecutor = cameraExecutor
+                    )
+                    view
+                },
+                modifier = modifier
+                    .aspectRatio(9.5f / 16f) // 너비 비율에 맞춰서 높이 조절
+            )
+            Text(
+                text = if (isSquatDown.value == true) "내려가!!!!" else "올라가!!!!",
+                color = Color.Red,
+                fontSize = 28.sp,
+                modifier = modifier.align(Alignment.Center)
+            )
+        }
         Row(
             modifier = modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .padding(top = 20.dp),
             horizontalArrangement = Arrangement.Absolute.Center
+            horizontalArrangement = Arrangement.Absolute.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = Icons.Default.AddCircle,
