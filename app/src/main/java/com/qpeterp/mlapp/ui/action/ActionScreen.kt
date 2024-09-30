@@ -54,22 +54,21 @@ fun ActionScreen(
     val count = actionViewModel.count.observeAsState()
     val squatState = actionViewModel.squatState.observeAsState()
     val tts = rememberTextToSpeech()
-    remember {
-        mutableStateOf(
-            if (tts.value?.isSpeaking == true) {
-                tts.value?.stop()
-                false
-            } else {
-                tts.value?.speak(
-                    squatState.value?.message ?: "오류발생",
-                    TextToSpeech.QUEUE_FLUSH,
-                    null,
-                    ""
-                )
-                true
-            }
+    val isSpeaking = remember { mutableStateOf(false) }
+
+    isSpeaking.value = if (tts.value?.isSpeaking == true) {
+        tts.value?.stop()
+        false
+    } else {
+        tts.value?.speak(
+            squatState.value?.message,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            ""
         )
+        true
     }
+
 
     Column(
         modifier = modifier
