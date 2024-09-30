@@ -3,22 +3,23 @@ package com.qpeterp.mlapp.viewmodel.action
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.qpeterp.mlapp.data.action.PoseType
 
 class ActionViewModel : ViewModel() {
     private val _count = MutableLiveData<Int>(0)
-    private val _isSquatDown = MutableLiveData<Boolean>(true)
+    private val _squatState = MutableLiveData<PoseType>(PoseType.DOWN)
 
     val count: LiveData<Int>
         get() = _count
 
-    val isSquatDown: LiveData<Boolean>
-        get() = _isSquatDown
+    val squatState: LiveData<PoseType>
+        get() = _squatState
 
     fun addCount() {
         _count.value = _count.value!! + 1
     }
 
-    fun squatDownState() {
-        _isSquatDown.value = _isSquatDown.value!!.not() // _isSquatDown is init true
+    fun setSquatState(poseType: PoseType) {
+        _squatState.value = poseType
     }
 }

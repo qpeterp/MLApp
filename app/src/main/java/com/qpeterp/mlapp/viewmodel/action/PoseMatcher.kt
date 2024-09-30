@@ -4,7 +4,6 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.qpeterp.mlapp.data.action.TargetPose
 import com.qpeterp.mlapp.data.action.TargetShape
-import com.qpeterp.mlapp.utils.log
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -63,9 +62,6 @@ class PoseMatcher {
         )
 
         var absoluteAngle = abs(angle)
-
-        // 각도를 로그로 출력
-        log("Calculated angle: $absoluteAngle between landmarks")
 
         if (absoluteAngle > 180) {
             absoluteAngle = 360 - absoluteAngle

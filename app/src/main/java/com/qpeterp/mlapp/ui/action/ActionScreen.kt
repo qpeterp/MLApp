@@ -8,7 +8,6 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.qpeterp.mlapp.R
+import com.qpeterp.mlapp.data.action.PoseType
 import com.qpeterp.mlapp.utils.logE
 import com.qpeterp.mlapp.viewmodel.action.ActionViewModel
 import com.qpeterp.mlapp.viewmodel.action.ActionViewModelFactory
@@ -54,7 +54,7 @@ fun ActionScreen(modifier: Modifier = Modifier) {
     actionViewModel = viewModel(factory = ActionViewModelFactory())
     // count의 LiveData를 Compose 상태로 변환
     val count = actionViewModel.count.observeAsState(initial = 0)
-    val isSquatDown = actionViewModel.isSquatDown.observeAsState(initial = 0)
+    val squatState = actionViewModel.squatState.observeAsState(initial = 0)
     val isSpeaking = remember { mutableStateOf(false) }
     val tts = rememberTextToSpeech()
 
@@ -63,7 +63,16 @@ fun ActionScreen(modifier: Modifier = Modifier) {
          false
     } else {
         tts.value?.speak(
-            if (isSquatDown.value == true) "내려가!!!" else "올라가!!", TextToSpeech.QUEUE_FLUSH, null, ""
+            when(squatState.value) {
+                PoseType.UP -> "올라가"
+                PoseType.DOWN -> "내려가"
+                PoseType.MAINTAIN -> "유지해"
+                PoseType.DISHEVELED -> "다시앉아"
+                else -> "오류발생"
+            },
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            ""
         )
         true
     }
@@ -71,7 +80,6 @@ fun ActionScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(if (isSquatDown.value == true) Color.Red else Color.Green)
     ) {
         Box(modifier = modifier.fillMaxWidth()) {
             AndroidView(
@@ -92,7 +100,13 @@ fun ActionScreen(modifier: Modifier = Modifier) {
                     .aspectRatio(9.5f / 16f) // 너비 비율에 맞춰서 높이 조절
             )
             Text(
-                text = if (isSquatDown.value == true) "내려가!!!!" else "올라가!!!!",
+                text = when(squatState.value) {
+                    PoseType.UP -> "올라가"
+                    PoseType.DOWN -> "내려가"
+                    PoseType.MAINTAIN -> "유지해"
+                    PoseType.DISHEVELED -> "다시앉아"
+                    else -> "오류발생"
+                },
                 color = Color.Red,
                 fontSize = 28.sp,
                 modifier = modifier.align(Alignment.Center)

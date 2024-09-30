@@ -9,9 +9,15 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import com.qpeterp.mlapp.data.action.PoseType
 import com.qpeterp.mlapp.data.action.TargetPose
 import com.qpeterp.mlapp.data.action.TargetShape
 import com.qpeterp.mlapp.utils.log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
     // 영상 포즈 감지
@@ -39,22 +45,40 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
             ),
         )
     )
+    private var isSquatDownTimeValid = false // 2초 유지 여부 체크
+    private var squatJob: Job? = null
     private val poseMatcher = PoseMatcher()
     private val onPoseDetected: (pose: Pose) -> Unit = { pose ->
         val isSquatDown = poseMatcher.match(pose, targetSquatDownPose)
         val isSquatUp = poseMatcher.match(pose, targetSquatUpPose)
         when {
             isSquatDown -> {
-                if (actionViewModel.isSquatDown.value == true) {
-                    actionViewModel.squatDownState()
+                if (actionViewModel.squatState.value == PoseType.DOWN || actionViewModel.squatState.value == PoseType.DISHEVELED) {
+                    squatJob = CoroutineScope(Dispatchers.Main).launch {
+                        actionViewModel.setSquatState(PoseType.MAINTAIN)
+                        delay(5000) // 5초 대기
+                        isSquatDownTimeValid = true // 5초 유지 후에만 true로 변경
+                        actionViewModel.setSquatState(PoseType.UP)
+                        log("!!!!! ImagAnalyzer isSquatDown -> maintain 5s")
+                    }
                 }
             }
+
             isSquatUp -> {
-                if (actionViewModel.isSquatDown.value == false) {
-                    log("!!!!!!스쿼트 횟수 : ${actionViewModel.count.value}")
-                    actionViewModel.addCount()
-                    actionViewModel.squatDownState()
+                if (actionViewModel.squatState.value == PoseType.UP) {
+                    if (isSquatDownTimeValid) {
+                        log("스쿼트 카운트 증가!!!")
+                        actionViewModel.addCount()
+                        actionViewModel.setSquatState(PoseType.DOWN)
+                    }
+                } else {
+                    if (actionViewModel.squatState.value != PoseType.DOWN) {
+                        actionViewModel.setSquatState(PoseType.DISHEVELED)
+                    }
                 }
+                // 상태 초기화
+                isSquatDownTimeValid = false // 카운트가 올라가면 다시 false로 리셋
+                squatJob?.cancel() // 타이머 취소
             }
         }
     }
