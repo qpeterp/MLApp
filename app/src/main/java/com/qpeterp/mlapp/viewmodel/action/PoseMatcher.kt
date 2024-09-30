@@ -9,12 +9,9 @@ import kotlin.math.atan2
 
 class PoseMatcher {
     fun match(pose: Pose, targetPose: TargetPose): Boolean {
-        return extractAndMatch(pose, targetPose)
-    }
-    private fun extractAndMatch(pose: Pose, targetPose: TargetPose) : Boolean {
         targetPose.targets.forEach { target ->
             val (firstLandmark, middleLandmark, lastLandmark) = extractLandmark(pose, target)
-						//Check landmark is null
+            //Check landmark is null
             if (landmarkNotFound(firstLandmark, middleLandmark, lastLandmark)) {
                 return false
             }
@@ -26,6 +23,7 @@ class PoseMatcher {
         }
         return true
     }
+
     private fun extractLandmark(
         pose: Pose,
         target: TargetShape
@@ -36,9 +34,11 @@ class PoseMatcher {
             extractLandmarkFromType(pose, target.lastLandmarkType)
         )
     }
+
     private fun extractLandmarkFromType(pose: Pose, landmarkType: Int): PoseLandmark? {
         return pose.getPoseLandmark(landmarkType)
     }
+
     private fun landmarkNotFound(
         firstLandmark: PoseLandmark?,
         middleLandmark: PoseLandmark?,
@@ -46,6 +46,7 @@ class PoseMatcher {
     ): Boolean {
         return firstLandmark == null || middleLandmark == null || lastLandmark == null
     }
+
     private fun calculateAngle(
         firstLandmark: PoseLandmark,
         middleLandmark: PoseLandmark,
@@ -68,11 +69,12 @@ class PoseMatcher {
         }
         return absoluteAngle
     }
+
     private fun anglesMatch(angle: Double, targetAngle: Double): Boolean {
-        return angle < targetAngle + offset && angle > targetAngle - offset
+        return angle < targetAngle + OFFSET && angle > targetAngle - OFFSET
     }
 
     companion object {
-        private const val offset = 15.0
+        private const val OFFSET = 15.0
     }
 }

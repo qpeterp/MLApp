@@ -64,7 +64,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        actionViewModel = ViewModelProvider(this, ActionViewModelFactory()).get(ActionViewModel::class.java)
+        actionViewModel =
+            ViewModelProvider(this, ActionViewModelFactory())[ActionViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()

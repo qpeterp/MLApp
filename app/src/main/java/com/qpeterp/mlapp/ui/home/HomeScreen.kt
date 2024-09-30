@@ -1,16 +1,14 @@
 package com.qpeterp.mlapp.ui.home
 
-import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.ScrollView
-import android.widget.Scroller
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,17 +19,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -44,7 +36,8 @@ import com.qpeterp.mlapp.ui.theme.MLAppTheme
 fun HomeScreen() {
     val cardDataList = listOf(
         HomeCardData(label = "MVVM 아키텍처란?", url = "https://learn.microsoft.com/en-us/dotnet/architecture/maui/mvvm#the-mvvm-pattern"),
-        HomeCardData(label = "Google ML Kit 이란?", url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        HomeCardData(label = "Google ML Kit 이란?", url = "https://developers.google.com/ml-kit/guides?hl=ko"),
+        HomeCardData(label = "Pose Detector 란?", url = "https://developers.google.com/ml-kit/vision/pose-detection?hl=ko")
     )
     MLAppTheme {
         LazyColumn(
@@ -97,7 +90,11 @@ fun HomeCard(
                 )
             }
 
-            AnimatedVisibility(visible = informationState.value) {
+            AnimatedVisibility(
+                visible = informationState.value,
+                enter = fadeIn() + expandIn(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
                 Column{
                     Spacer(modifier = modifier.height(16.dp))
                     WebView(
