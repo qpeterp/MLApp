@@ -1,7 +1,7 @@
 package com.qpeterp.mlapp.utils
 
 import android.util.Log
-import com.qpeterp.mlapp.Common.Constant
+import com.qpeterp.mlapp.common.Constant
 
 fun log(message: String) {
     Log.d(Constant.TAG, message)
