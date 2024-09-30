@@ -38,10 +38,16 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
     private val targetSquatUpPose: TargetPose = TargetPose(
         listOf(
             TargetShape(
-                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 180.0
+                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 165.0
             ),
             TargetShape(
-                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 180.0
+                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 165.0
+            ),
+            TargetShape(
+                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 150.0
+            ),
+            TargetShape(
+                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 150.0
             ),
         )
     )
