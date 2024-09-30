@@ -28,26 +28,20 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
     private val targetSquatDownPose: TargetPose = TargetPose(
         listOf(
             TargetShape(
-                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 85.0
+                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 95.0
             ),
             TargetShape(
-                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 85.0
+                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 95.0
             ),
         )
     )
     private val targetSquatUpPose: TargetPose = TargetPose(
         listOf(
             TargetShape(
-                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 165.0
+                PoseLandmark.LEFT_ANKLE, PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, 180.0
             ),
             TargetShape(
-                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 165.0
-            ),
-            TargetShape(
-                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 150.0
-            ),
-            TargetShape(
-                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 150.0
+                PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 180.0
             ),
         )
     )
@@ -62,10 +56,9 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
                 if (actionViewModel.squatState.value == PoseType.DOWN || actionViewModel.squatState.value == PoseType.DISHEVELED) {
                     actionViewModel.setSquatState(PoseType.MAINTAIN)
                     squatJob = CoroutineScope(Dispatchers.Main).launch {
-                        delay(5000) // 5초 대기
+                        delay(3000) // 5초 대기
                         isSquatDownTimeValid = true // 5초 유지 후에만 true로 변경
                         actionViewModel.setSquatState(PoseType.UP)
-                        log("!!!!! ImagAnalyzer isSquatDown -> maintain 5s")
                     }
                 }
             }
@@ -73,7 +66,6 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
             isSquatUp -> {
                 if (actionViewModel.squatState.value == PoseType.UP) {
                     if (isSquatDownTimeValid) {
-                        log("스쿼트 카운트 증가!!!")
                         actionViewModel.addCount()
                         actionViewModel.setSquatState(PoseType.DOWN)
                     }
