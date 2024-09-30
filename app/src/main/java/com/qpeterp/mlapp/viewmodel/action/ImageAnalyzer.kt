@@ -60,8 +60,8 @@ class ImageAnalyzer(actionViewModel: ActionViewModel) : ImageAnalysis.Analyzer {
         when {
             isSquatDown -> {
                 if (actionViewModel.squatState.value == PoseType.DOWN || actionViewModel.squatState.value == PoseType.DISHEVELED) {
+                    actionViewModel.setSquatState(PoseType.MAINTAIN)
                     squatJob = CoroutineScope(Dispatchers.Main).launch {
-                        actionViewModel.setSquatState(PoseType.MAINTAIN)
                         delay(5000) // 5초 대기
                         isSquatDownTimeValid = true // 5초 유지 후에만 true로 변경
                         actionViewModel.setSquatState(PoseType.UP)
