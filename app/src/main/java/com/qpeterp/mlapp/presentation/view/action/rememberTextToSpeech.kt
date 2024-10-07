@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.viewmodel.action
+package com.qpeterp.mlapp.presentation.view.action
 
 import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.Composable
@@ -7,23 +7,20 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import java.util.Locale
+import com.qpeterp.mlapp.domain.usecase.action.TextToSpeech as TTS
 
 @Composable
 fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
+    val textToSpeech = TTS()
     val context = LocalContext.current
     val tts = remember { mutableStateOf<TextToSpeech?>(null) }
     DisposableEffect(context) {
-        val textToSpeech = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                tts.value?.language = Locale.KOREA
-            }
-        }
-        tts.value = textToSpeech
+        val speech = textToSpeech.textToSpeech(context, tts.value)
+        tts.value = speech
 
         onDispose {
-            textToSpeech.stop()
-            textToSpeech.shutdown()
+            speech.stop()
+            speech.shutdown()
         }
     }
     return tts
