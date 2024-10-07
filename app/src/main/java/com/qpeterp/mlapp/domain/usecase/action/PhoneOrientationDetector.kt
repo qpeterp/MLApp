@@ -23,10 +23,10 @@ class PhoneOrientationDetector(context: Context) : SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null && event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             val y = event.values[1] // Y축 가속도 값
-            val z = event.values[2] // Z축 가속도 값
+//            val z = event.values[2] // Z축 가속도 값
 
             // Z축의 값이 9.8에 가까우면, 기기가 바닥에 수직으로 누워 있는 상태
-            if (Math.abs(z) < 1 && abs(y) > 9) {
+            if (abs(y) > 3) {
                 verticalHilt = true
                 log("핸드폰이 세워져 있음")
             }
