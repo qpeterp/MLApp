@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.theme
+package com.qpeterp.mlapp.presentation.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

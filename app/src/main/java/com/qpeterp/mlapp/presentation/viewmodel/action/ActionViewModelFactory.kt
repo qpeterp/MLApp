@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.viewmodel.action
+package com.qpeterp.mlapp.presentation.viewmodel.action
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

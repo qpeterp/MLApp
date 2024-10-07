@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.data.action
+package com.qpeterp.mlapp.domain.model.action
 
 data class TargetShape(
     val firstLandmarkType: Int,

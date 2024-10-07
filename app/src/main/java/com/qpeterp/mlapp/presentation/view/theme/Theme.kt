@@ -1,6 +1,5 @@
-package com.qpeterp.mlapp.ui.theme
+package com.qpeterp.mlapp.presentation.view.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

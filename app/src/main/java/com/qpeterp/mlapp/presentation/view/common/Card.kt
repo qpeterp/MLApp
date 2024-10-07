@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.common
+package com.qpeterp.mlapp.presentation.view.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

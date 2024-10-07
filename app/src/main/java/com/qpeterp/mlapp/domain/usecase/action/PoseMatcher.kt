@@ -1,13 +1,18 @@
-package com.qpeterp.mlapp.viewmodel.action
+package com.qpeterp.mlapp.domain.usecase.action
 
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.qpeterp.mlapp.data.action.TargetPose
-import com.qpeterp.mlapp.data.action.TargetShape
+import com.qpeterp.mlapp.domain.model.action.TargetPose
+import com.qpeterp.mlapp.domain.model.action.TargetShape
+import com.qpeterp.mlapp.utils.log
 import kotlin.math.abs
 import kotlin.math.atan2
 
 class PoseMatcher {
+    companion object {
+        private const val OFFSET = 15.0
+    }
+
     fun match(pose: Pose, targetPose: TargetPose): Boolean {
         targetPose.targets.forEach { target ->
             val (firstLandmark, middleLandmark, lastLandmark) = extractLandmark(pose, target)
@@ -17,6 +22,7 @@ class PoseMatcher {
             }
             val angle = calculateAngle(firstLandmark!!, middleLandmark!!, lastLandmark!!)
             val targetAngle = target.angle
+            log("${firstLandmark.landmarkType} $angle !!!!!!!!!!!!!!!")
             if (!anglesMatch(angle, targetAngle)) {
                 return false
             }
@@ -72,9 +78,5 @@ class PoseMatcher {
 
     private fun anglesMatch(angle: Double, targetAngle: Double): Boolean {
         return angle < targetAngle + OFFSET && angle > targetAngle - OFFSET
-    }
-
-    companion object {
-        private const val OFFSET = 15.0
     }
 }

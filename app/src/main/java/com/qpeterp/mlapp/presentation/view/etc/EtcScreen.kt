@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.etc
+package com.qpeterp.mlapp.presentation.view.etc
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
-import com.qpeterp.mlapp.ui.common.Card
+import com.qpeterp.mlapp.presentation.view.common.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.qpeterp.mlapp.data.etc.EtcCardData
-import com.qpeterp.mlapp.ui.theme.MLAppTheme
+import com.qpeterp.mlapp.domain.model.etc.EtcCardData
+import com.qpeterp.mlapp.presentation.view.theme.MLAppTheme
 import com.qpeterp.mlapp.utils.log
 
 @Composable

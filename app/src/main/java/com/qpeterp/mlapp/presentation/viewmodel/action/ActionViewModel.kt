@@ -1,9 +1,9 @@
-package com.qpeterp.mlapp.viewmodel.action
+package com.qpeterp.mlapp.presentation.viewmodel.action
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.qpeterp.mlapp.data.action.PoseType
+import com.qpeterp.mlapp.domain.model.action.PoseType
 
 class ActionViewModel : ViewModel() {
     private val _count = MutableLiveData<Int>(0)
