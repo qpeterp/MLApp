@@ -26,9 +26,10 @@ class PhoneOrientationDetector(context: Context) : SensorEventListener {
 //            val z = event.values[2] // Z축 가속도 값
 
             // Z축의 값이 9.8에 가까우면, 기기가 바닥에 수직으로 누워 있는 상태
-            if (abs(y) > 3) {
-                verticalHilt = true
-                log("핸드폰이 세워져 있음")
+            verticalHilt = if (abs(y) > 3) {
+                true
+            } else {
+                false
             }
         }
     }

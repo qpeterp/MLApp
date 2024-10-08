@@ -1,4 +1,4 @@
-package com.qpeterp.mlapp.ui.action
+package com.qpeterp.mlapp.presentation.view.action
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
@@ -8,6 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +39,16 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.qpeterp.mlapp.domain.model.action.ExerciseType
+import com.qpeterp.mlapp.presentation.viewmodel.action.ActionViewModel
+import com.qpeterp.mlapp.presentation.viewmodel.action.ActionViewModelFactory
 import com.qpeterp.mlapp.utils.logE
-import com.qpeterp.mlapp.viewmodel.action.ActionViewModel
-import com.qpeterp.mlapp.viewmodel.action.ActionViewModelFactory
-import com.qpeterp.mlapp.viewmodel.action.ImageAnalyzer
-import com.qpeterp.mlapp.viewmodel.action.rememberTextToSpeech
+import com.qpeterp.mlapp.domain.usecase.action.ImageAnalyzer
+import com.qpeterp.mlapp.domain.usecase.action.PhoneOrientationDetector
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+private lateinit var phoneOrientationDetector: PhoneOrientationDetector // TODO: viewModel 이나 다른 곳으로 옯겨서 관리.
 
 @Composable
 fun ActionScreen(
@@ -49,12 +57,12 @@ fun ActionScreen(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // 같은 타입 적어놓으면 에러 터짐. 내 어이도 같이 터짐 이게 맞냐?
     // count의 LiveData를 Compose 상태로 변환
     val count = actionViewModel.count.observeAsState()
     val squatState = actionViewModel.squatState.observeAsState()
     val tts = rememberTextToSpeech()
     val isSpeaking = remember { mutableStateOf(false) }
+    val selectedOption = remember { mutableStateOf(ExerciseType.SQUAT) }
 
     isSpeaking.value = if (tts.value?.isSpeaking == true) {
         tts.value?.stop()
@@ -62,13 +70,12 @@ fun ActionScreen(
     } else {
         tts.value?.speak(
             squatState.value?.message,
-            TextToSpeech.QUEUE_FLUSH,
+            TextToSpeech.QUEUE_FLUSH, // TODO: 이거 뭐하는건지 확인 ㄱㄱ
             null,
             ""
         )
         true
     }
-
 
     Column(
         modifier = modifier
@@ -133,6 +140,55 @@ fun ActionScreen(
             )
         }
     }
+
+    Column(
+        Modifier
+            .background(Color(0x55FFFF00), shape = RoundedCornerShape(16.dp))
+            .padding(end = 20.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption.value == ExerciseType.SQUAT,
+                onClick = {
+                    selectedOption.value = ExerciseType.SQUAT
+                    actionViewModel.setExerciseType(ExerciseType.SQUAT)
+                },
+                colors = RadioButtonColors(
+                    selectedColor = Color.Yellow,
+                    unselectedColor = Color.Yellow,
+                    disabledSelectedColor = Color.Yellow,
+                    disabledUnselectedColor = Color.Yellow
+                )
+            )
+            Text(ExerciseType.SQUAT.label)
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption.value == ExerciseType.PUSH_UP,
+                onClick = {
+                    selectedOption.value = ExerciseType.PUSH_UP
+                    actionViewModel.setExerciseType(ExerciseType.PUSH_UP)
+                },
+                colors = RadioButtonColors(
+                    selectedColor = Color.Yellow,
+                    unselectedColor = Color.Yellow,
+                    disabledSelectedColor = Color.Yellow,
+                    disabledUnselectedColor = Color.Yellow
+                )
+            )
+            Text(ExerciseType.PUSH_UP.label)
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        onDispose {
+            phoneOrientationDetector.unregister()
+        }
+    }
 }
 
 private fun startCamera(
@@ -143,6 +199,7 @@ private fun startCamera(
     actionViewModel: ActionViewModel
 ) {
     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+    phoneOrientationDetector = PhoneOrientationDetector(context)
 
     cameraProviderFuture.addListener({
         val cameraProvider = cameraProviderFuture.get()
@@ -154,7 +211,10 @@ private fun startCamera(
         val imageAnalysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST) // 최신 이미지만 유지
             .build().also {
-                it.setAnalyzer(cameraExecutor, ImageAnalyzer(actionViewModel)) // 분석기 설정
+                it.setAnalyzer(
+                    cameraExecutor,
+                    ImageAnalyzer(actionViewModel, context)
+                ) // 분석기 설정
             }
 
         val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
