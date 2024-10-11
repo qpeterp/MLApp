@@ -217,7 +217,7 @@ private fun startCamera(
                 ) // 분석기 설정
             }
 
-        val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
         try {
             cameraProvider.unbindAll()
