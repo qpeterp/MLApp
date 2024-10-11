@@ -25,7 +25,7 @@ import com.qpeterp.mlapp.utils.log
 @Composable
 fun EtcScreen() {
     val cardDataList = listOf(
-        EtcCardData(label = "팔 굽혀 펴기 인식", onClick = {})
+        EtcCardData(label = "텍스트 인식 v2", onClick = {})
     )
     MLAppTheme {
         LazyColumn(
@@ -40,7 +40,7 @@ fun EtcScreen() {
                         label = cardData.label,
                         modifier = Modifier.padding(20.dp),
                     ) {
-                        log("asdfasdfasfsdfsfasdffdsf")
+                        log("${cardData.label} 눌렀다!")
                     }
                 }
             }
@@ -68,7 +68,7 @@ fun EtcCard(
         ) {
             Icon(
                 imageVector = Icons.Default.Build,
-                contentDescription = "It mean build or tools",
+                contentDescription = "It mean build or tools icon",
                 tint = Color.Yellow
             )
             Text(
