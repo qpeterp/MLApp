@@ -122,12 +122,12 @@ class ExerciseClassification(
         when(exerciseType) {
             ExerciseType.SQUAT -> {
                 if (pose.getPoseLandmark(25) == null || pose.getPoseLandmark(26) == null) return
-                if (pose.getPoseLandmark(25)!!.inFrameLikelihood < 0.85 || pose.getPoseLandmark(26)!!.inFrameLikelihood < 0.85) return
+                if (pose.getPoseLandmark(25)!!.inFrameLikelihood < 0.92 || pose.getPoseLandmark(26)!!.inFrameLikelihood < 0.92) return
                 if (!phoneOrientationDetector.verticalHilt) return // check phone inclination horizontal
             }
             ExerciseType.PUSH_UP -> {
                 if (pose.getPoseLandmark(14) == null || pose.getPoseLandmark(30) == null) return
-                if (pose.getPoseLandmark(14)!!.inFrameLikelihood < 0.85 || pose.getPoseLandmark(30)!!.inFrameLikelihood < 0.85) return
+                if (pose.getPoseLandmark(14)!!.inFrameLikelihood < 0.92 || pose.getPoseLandmark(30)!!.inFrameLikelihood < 0.92) return
                 if (phoneOrientationDetector.verticalHilt) return // check phone inclination vertical
             }
             else -> {
