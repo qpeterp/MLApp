@@ -177,12 +177,14 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         onClick = {
-                            navController.navigate(item.route) {
-                                navController.graph.startDestinationRoute?.let {
-                                    popUpTo(it) { saveState = true }
+                            if (currentRoute != item.route) { // 현재 화면과 다른 경우에만 네비게이트
+                                navController.navigate(item.route) {
+                                    navController.graph.startDestinationRoute?.let {
+                                        popUpTo(it) { saveState = true }
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(
