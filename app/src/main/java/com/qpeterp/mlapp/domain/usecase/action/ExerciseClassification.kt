@@ -28,6 +28,12 @@ class ExerciseClassification(
             TargetShape(
                 PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 95.0
             ),
+            TargetShape(
+                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 95.0
+            ),
+            TargetShape(
+                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 95.0
+            ),
         )
     )
     private val targetSquatBasicPose: TargetPose = TargetPose(
@@ -38,15 +44,18 @@ class ExerciseClassification(
             TargetShape(
                 PoseLandmark.RIGHT_ANKLE, PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, 180.0
             ),
+            TargetShape(
+                PoseLandmark.LEFT_KNEE, PoseLandmark.LEFT_HIP, PoseLandmark.LEFT_SHOULDER, 180.0
+            ),
+            TargetShape(
+                PoseLandmark.RIGHT_KNEE, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_SHOULDER, 180.0
+            ),
         )
     )
     private val targetPushUpBasicPose: TargetPose = TargetPose(
         listOf(
             TargetShape(
-                PoseLandmark.RIGHT_WRIST,
-                PoseLandmark.RIGHT_ELBOW,
-                PoseLandmark.RIGHT_SHOULDER,
-                160.0
+                PoseLandmark.RIGHT_WRIST, PoseLandmark.RIGHT_ELBOW, PoseLandmark.RIGHT_SHOULDER, 160.0
             ),
             TargetShape(
                 PoseLandmark.RIGHT_SHOULDER, PoseLandmark.RIGHT_HIP, PoseLandmark.RIGHT_HEEL, 170.0
